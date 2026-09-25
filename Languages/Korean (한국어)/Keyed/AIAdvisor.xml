@@ -74,4 +74,9 @@
   <AIAdvisor_McpUsage>정착지를 불러온 뒤 그 앱에서 질문하세요. MCP가 켜져 있으면 게임 창이 뒤에 있어도 게임이 계속 돌아가니, 질문할 땐 일시정지해 두세요.</AIAdvisor_McpUsage>
   <AIAdvisor_Copy>복사</AIAdvisor_Copy>
   <AIAdvisor_Retrying>서버가 바쁩니다 ({3}). {0}초 뒤 다시 시도합니다 ({1}/{2})</AIAdvisor_Retrying>
+  <AIAdvisor_WebSearch>웹 검색 사용 (Claude / OpenAI 키)</AIAdvisor_WebSearch>
+  <AIAdvisor_WebSearchHelp>게임 규칙, 수치, 모드처럼 AI가 확실히 모르는 내용을 웹(림월드 위키 등)에서 찾아봅니다. Anthropic/OpenAI 서버에서 검색하며 1회당 약 $0.01이 들고, 검색 결과만큼 입력 토큰도 늘어납니다. Gemini, OpenRouter, 로컬 모델에서는 쓰이지 않습니다.</AIAdvisor_WebSearchHelp>
+  <AIAdvisor_WebSearchUse>[웹 검색]</AIAdvisor_WebSearchUse>
+  <AIAdvisor_Sources>출처:</AIAdvisor_Sources>
+  <AIAdvisor_WebSearchRejected>이 모델이나 계정에서는 웹 검색을 쓸 수 없어서 검색 없이 다시 보냈습니다. ({0})</AIAdvisor_WebSearchRejected>
 </LanguageData>

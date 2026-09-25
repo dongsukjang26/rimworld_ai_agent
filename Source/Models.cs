@@ -108,6 +108,20 @@ namespace AIAdvisor
             }
         }
 
+        /// <summary>
+        /// 서버 웹 검색 1회당 요금(USD). Anthropic $10/1k. OpenAI 는 추론 모델 $10/1k, 비추론 모델(gpt-4.x) $25/1k.
+        /// 검색 결과 토큰은 usage 의 입력 토큰에 이미 들어 있다. (2026-09 각 사 가격표)
+        /// </summary>
+        public static double WebSearchCostPerCall(ProviderKind p, string modelId)
+        {
+            switch (p)
+            {
+                case ProviderKind.Anthropic: return 0.01;
+                case ProviderKind.OpenAI: return (modelId ?? "").StartsWith("gpt-4") ? 0.025 : 0.01;
+                default: return 0;
+            }
+        }
+
         public static IEnumerable<AIModelDef> BuiltinModels(ProviderKind p)
         {
             return DefDatabase<AIModelDef>.AllDefsListForReading.Where(m => m.provider == p).OrderBy(m => m.order);

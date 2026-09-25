@@ -74,4 +74,9 @@
   <AIAdvisor_McpUsage>Load a colony, then ask in that app. While MCP is on the game keeps running in the background, so pause it while you ask.</AIAdvisor_McpUsage>
   <AIAdvisor_Copy>Copy</AIAdvisor_Copy>
   <AIAdvisor_Retrying>Server busy ({3}). Retrying in {0}s ({1}/{2})</AIAdvisor_Retrying>
+  <AIAdvisor_WebSearch>Allow web search (Claude / OpenAI keys)</AIAdvisor_WebSearch>
+  <AIAdvisor_WebSearchHelp>The AI can look things up on the web (e.g. the RimWorld Wiki) when it is unsure about game mechanics, numbers or mods. Runs on Anthropic/OpenAI servers: about $0.01 per search, plus the search results count as input tokens. Not used with Gemini, OpenRouter or local models.</AIAdvisor_WebSearchHelp>
+  <AIAdvisor_WebSearchUse>[Web search]</AIAdvisor_WebSearchUse>
+  <AIAdvisor_Sources>Sources:</AIAdvisor_Sources>
+  <AIAdvisor_WebSearchRejected>Web search is not available for this model or account, so the question was sent again without it. ({0})</AIAdvisor_WebSearchRejected>
 </LanguageData>

@@ -104,6 +104,7 @@ namespace AIAdvisor
 
             systemPrompt = systemPrompt ?? BuildSystemPrompt();
             var client = LlmClient.Create(provider, s.apiKey, model);
+            client.webSearch = s.webSearch;
             var specs = GameTools.Specs;
             AddEntry(EntryKind.User, text);
             int checkpoint = history.Count;
@@ -123,14 +124,19 @@ namespace AIAdvisor
         static async Task RunLoop(LlmClient client, ProviderKind provider, string model, List<ToolSpec> specs, int checkpoint, int maxRounds, CancellationToken ct)
         {
             bool success = false;
+            var sources = new List<KeyValuePair<string, string>>();
             try
             {
                 for (int round = 0; ; round++)
                 {
                     bool lastRound = round >= maxRounds;
-                    string system = lastRound ? systemPrompt + "\n\nYou have used all tool calls for this question. Answer now with the information you already have." : systemPrompt;
+                    string system = systemPrompt;
+                    if (client.WebSearchActive) system += WebSearchHint;
+                    if (lastRound) system += "\n\nYou have used all tool calls for this question. Answer now with the information you already have.";
                     var reply = await client.Complete(system, new List<object>(history), specs, ct).ConfigureAwait(false);
                     RecordUsage(provider, model, reply.usage);
+                    if (reply.webSearchRejected != null)
+                        Post(EntryKind.Info, "AIAdvisor_WebSearchRejected".TranslateSafe().Replace("{0}", reply.webSearchRejected));
 
                     if (reply.refused)
                     {
@@ -139,15 +145,20 @@ namespace AIAdvisor
                     }
 
                     history.AddRange(reply.historyItems);
+                    if (reply.webSearchQueries.Count > 0)
+                        Post(EntryKind.Tool, "AIAdvisor_WebSearchUse".TranslateSafe() + " " + string.Join(" / ", reply.webSearchQueries));
+                    foreach (var src in reply.sources)
+                        if (!sources.Any(x => x.Value == src.Value)) sources.Add(src);
 
                     if (reply.toolCalls.Count == 0 || reply.truncated || lastRound)
                     {
                         string answer = reply.text.Length > 0 ? reply.text : "AIAdvisor_EmptyAnswer".TranslateSafe();
-                        if (reply.truncated) answer += "\n\n" + "AIAdvisor_Truncated".TranslateSafe();
+                        answer += FormatSources(sources, answer);
+                        if (reply.truncated || reply.unfinished) answer += "\n\n" + "AIAdvisor_Truncated".TranslateSafe();
                         Post(EntryKind.Assistant, answer);
-                        if (reply.toolCalls.Count > 0)
+                        if (reply.toolCalls.Count > 0 || reply.unfinished)
                         {
-                            // 도구 호출로 끝난 assistant 메시지 뒤에는 결과가 와야 하므로 이번 턴은 기록에서 뺀다
+                            // 도구 호출(또는 끝나지 않은 웹 검색)로 끝난 assistant 메시지는 다음 요청에서 거부되므로 이번 턴은 기록에서 뺀다
                             RollbackTo(checkpoint, keepUserTurn: false);
                             Post(EntryKind.Info, "AIAdvisor_HistoryTrimmed".TranslateSafe());
                         }
@@ -196,10 +207,25 @@ namespace AIAdvisor
             if (history.Count > keep) history.RemoveRange(keep, history.Count - keep);
         }
 
+        const string WebSearchHint =
+            "\n- You also have a web_search tool. Use it when you are not sure about RimWorld game mechanics, exact numbers, 1.6/DLC-specific changes or mods, " +
+            "preferring the RimWorld Wiki (rimworldwiki.com). Do not search for things the game tools can tell you about this colony. Keep it to 1-3 searches per question.";
+
+        /// <summary>답변 본문에 링크가 없는 출처만 끝에 붙인다 (인용 출처 표시).</summary>
+        static string FormatSources(List<KeyValuePair<string, string>> sources, string answer)
+        {
+            var missing = sources.Where(s => answer.IndexOf(s.Value, StringComparison.OrdinalIgnoreCase) < 0).Take(6).ToList();
+            if (missing.Count == 0) return "";
+            var sb = new StringBuilder("\n\n" + "AIAdvisor_Sources".TranslateSafe());
+            foreach (var s in missing)
+                sb.Append("\n- ").Append(s.Key == s.Value ? s.Value : s.Key + " (" + s.Value + ")");
+            return sb.ToString();
+        }
+
         static void RecordUsage(ProviderKind provider, string model, Usage usage)
         {
             var price = Providers.PriceFor(provider, model);
-            double? cost = usage.Cost(price);
+            double? cost = usage.Cost(price, Providers.WebSearchCostPerCall(provider, model));
             MainThread.Post(() =>
             {
                 AdvisorMod.Settings.RecordUsage(usage, cost);

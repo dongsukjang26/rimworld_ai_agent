@@ -25,6 +25,8 @@ namespace AIAdvisor
         public bool pauseOnSend = true;
         public bool resumeAfterAnswer = false;
         public int maxToolRounds = 8;
+        /// <summary>Anthropic / OpenAI 서버의 웹 검색 도구를 쓴다. 검색 1회당 약 $0.01 추가.</summary>
+        public bool webSearch = true;
         /// <summary>누적 비용이 이 금액(USD)을 넘으면 전송을 막는다. 0 이면 제한 없음.</summary>
         public float spendLimitUsd = 0f;
 
@@ -113,6 +115,7 @@ namespace AIAdvisor
             Scribe_Values.Look(ref pauseOnSend, "pauseOnSend", true);
             Scribe_Values.Look(ref resumeAfterAnswer, "resumeAfterAnswer", false);
             Scribe_Values.Look(ref maxToolRounds, "maxToolRounds", 8);
+            Scribe_Values.Look(ref webSearch, "webSearch", true);
             Scribe_Values.Look(ref spendLimitUsd, "spendLimitUsd", 0f);
             Scribe_Values.Look(ref mcpEnabled, "mcpEnabled", false);
             Scribe_Values.Look(ref mcpPort, "mcpPort", DefaultMcpPort);

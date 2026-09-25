@@ -85,6 +85,10 @@ namespace AIAdvisor
             ls.CheckboxLabeled("AIAdvisor_ResumeAfter".Translate(), ref s.resumeAfterAnswer);
             ls.Label("AIAdvisor_MaxToolRounds".Translate(s.maxToolRounds));
             s.maxToolRounds = Mathf.RoundToInt(ls.Slider(s.maxToolRounds, 1, 20));
+            ls.CheckboxLabeled("AIAdvisor_WebSearch".Translate(), ref s.webSearch, "AIAdvisor_WebSearchHelp".Translate());
+            GUI.color = Color.gray;
+            ls.Label("AIAdvisor_WebSearchHelp".Translate());
+            GUI.color = Color.white;
 
             Rect limitRow = ls.GetRect(30f);
             Widgets.Label(new Rect(limitRow.x, limitRow.y + 4f, 330f, limitRow.height), "AIAdvisor_SpendLimit".Translate());

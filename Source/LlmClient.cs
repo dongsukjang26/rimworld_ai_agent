@@ -36,6 +36,8 @@ namespace AIAdvisor
         public long cacheRead;
         public long cacheWrite;
         public long output;
+        /// <summary>서버에서 실행된 웹 검색 횟수. 토큰과 별도로 과금된다.</summary>
+        public int webSearches;
         /// <summary>API가 직접 알려준 비용(OpenRouter). 없으면 null.</summary>
         public double? reportedCost;
 
@@ -47,11 +49,12 @@ namespace AIAdvisor
             cacheRead += u.cacheRead;
             cacheWrite += u.cacheWrite;
             output += u.output;
+            webSearches += u.webSearches;
             if (u.reportedCost.HasValue) reportedCost = (reportedCost ?? 0) + u.reportedCost.Value;
         }
 
         /// <summary>달러 비용. 가격을 모르면 null.</summary>
-        public double? Cost(ModelPrice price)
+        public double? Cost(ModelPrice price, double webSearchPerCall = 0)
         {
             if (reportedCost.HasValue) return reportedCost;
             if (price == null || !price.Known) return null;
@@ -59,7 +62,8 @@ namespace AIAdvisor
             return (inputUncached * (double)price.inputPerM
                     + cacheRead * cached
                     + cacheWrite * price.inputPerM * 1.25
-                    + output * (double)price.outputPerM) / 1_000_000.0;
+                    + output * (double)price.outputPerM) / 1_000_000.0
+                   + webSearches * webSearchPerCall;
         }
     }
 
@@ -73,6 +77,14 @@ namespace AIAdvisor
         public string stopReason;
         public bool refused;
         public bool truncated;
+        /// <summary>서버 도구 실행이 끝나지 않은 채 멈춘 턴. 기록에 남기면 다음 요청이 거부된다.</summary>
+        public bool unfinished;
+        /// <summary>이번 응답에서 실행된 웹 검색어.</summary>
+        public List<string> webSearchQueries = new List<string>();
+        /// <summary>답변이 인용한 웹 출처 (제목, URL).</summary>
+        public List<KeyValuePair<string, string>> sources = new List<KeyValuePair<string, string>>();
+        /// <summary>이 모델/계정에서 웹 검색이 거부돼서 검색 없이 다시 보냈을 때의 오류 메시지.</summary>
+        public string webSearchRejected;
     }
 
     public class LlmException : Exception
@@ -85,10 +97,52 @@ namespace AIAdvisor
         protected readonly string apiKey;
         protected readonly string model;
 
+        /// <summary>true 면 회사 서버의 웹 검색 도구를 같이 보낸다 (Anthropic / OpenAI 만 지원).</summary>
+        public bool webSearch;
+
+        public virtual bool SupportsWebSearch => false;
+
+        public bool WebSearchActive => webSearch && SupportsWebSearch && !webSearchRejected.Contains(model ?? "");
+
+        /// <summary>웹 검색 도구를 거부한 모델 (게임을 끌 때까지 기억). 계정에서 꺼져 있거나 모델이 지원하지 않는 경우.</summary>
+        static readonly HashSet<string> webSearchRejected = new HashSet<string>();
+
         protected LlmClient(string apiKey, string model)
         {
             this.apiKey = (apiKey ?? "").Trim();
             this.model = model;
+        }
+
+        /// <summary>
+        /// 웹 검색을 켠 요청을 보내고, 웹 검색 도구 때문에 400 이 나면 검색 없이 한 번 더 보낸다.
+        /// (예: gpt-4.1-nano, gpt-5 의 minimal 추론, 조직 설정에서 웹 검색을 끈 Anthropic 계정)
+        /// </summary>
+        protected async Task<object> PostWithWebSearchFallback(string url, Dictionary<string, string> headers, Func<bool, object> buildBody, LlmReply reply, CancellationToken ct, int timeoutSeconds = Http.TimeoutSeconds)
+        {
+            bool search = WebSearchActive;
+            try
+            {
+                return await PostJson(url, headers, buildBody(search), ct, timeoutSeconds).ConfigureAwait(false);
+            }
+            catch (LlmException e) when (search && IsWebSearchRejection(e.Message))
+            {
+                lock (webSearchRejected) webSearchRejected.Add(model ?? "");
+                reply.webSearchRejected = e.Message;
+                return await PostJson(url, headers, buildBody(false), ct, timeoutSeconds).ConfigureAwait(false);
+            }
+        }
+
+        static bool IsWebSearchRejection(string msg)
+        {
+            if (msg == null || !msg.StartsWith("HTTP 400")) return false;
+            return msg.IndexOf("web_search", StringComparison.OrdinalIgnoreCase) >= 0
+                   || msg.IndexOf("web search", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        protected static void AddSource(LlmReply reply, string title, string url)
+        {
+            if (string.IsNullOrEmpty(url) || reply.sources.Any(s => s.Value == url)) return;
+            reply.sources.Add(new KeyValuePair<string, string>(string.IsNullOrEmpty(title) ? url : title, url));
         }
 
         public abstract object UserMessage(string text);
@@ -235,62 +289,112 @@ namespace AIAdvisor
             yield return new Dictionary<string, object> { { "role", "user" }, { "content", blocks } };
         }
 
+        public override bool SupportsWebSearch => true;
+
+        /// <summary>질문 하나(요청 하나)에서 허용할 서버 웹 검색 횟수.</summary>
+        const int MaxWebSearchesPerRequest = 5;
+        /// <summary>서버 도구 루프가 pause_turn 으로 멈췄을 때 이어서 보낼 최대 횟수.</summary>
+        const int MaxPauseContinuations = 4;
+
         public override async Task<LlmReply> Complete(string system, List<object> history, List<ToolSpec> tools, CancellationToken ct)
         {
             var def = Providers.FindDef(ProviderKind.Anthropic, model);
+            bool fallback = def != null && def.serverFallback;
+            string effort = AdvisorMod.Settings.EffectiveEffort(ProviderKind.Anthropic, model);
+
+            var reply = new LlmReply();
+            // pause_turn 이면 멈춘 assistant 내용을 그대로 붙여 다시 보내고, 이어진 내용은 같은 assistant 메시지에 합친다
+            var content = new List<object>();
+            for (int attempt = 0; ; attempt++)
+            {
+                var messages = new List<object>(history);
+                if (content.Count > 0)
+                    messages.Add(new Dictionary<string, object> { { "role", "assistant" }, { "content", new List<object>(content) } });
+
+                var resp = await PostWithWebSearchFallback(Base + "messages", Headers(fallback),
+                    search => BuildBody(system, messages, tools, search, effort, fallback), reply, ct).ConfigureAwait(false);
+
+                content.AddRange(resp.Arr("content"));
+                reply.stopReason = resp.Str("stop_reason");
+                var u = resp.Get("usage");
+                reply.usage.Add(new Usage
+                {
+                    inputUncached = (long)u.Num("input_tokens"),
+                    cacheRead = (long)u.Num("cache_read_input_tokens"),
+                    cacheWrite = (long)u.Num("cache_creation_input_tokens"),
+                    output = (long)u.Num("output_tokens"),
+                    webSearches = (int)u.Get("server_tool_use").Num("web_search_requests"),
+                });
+                if (reply.stopReason != "pause_turn" || attempt >= MaxPauseContinuations) break;
+            }
+
+            reply.historyItems.Add(new Dictionary<string, object> { { "role", "assistant" }, { "content", content } });
+            var text = new System.Text.StringBuilder();
+            bool prevWasText = false;
+            foreach (var block in content)
+            {
+                string type = block.Str("type");
+                if (type == "text")
+                {
+                    // 인용이 있으면 문장 중간에서 text 블록이 나뉘므로 붙어 있는 블록은 그대로 이어 붙인다
+                    if (!prevWasText && text.Length > 0) text.Append("\n\n");
+                    text.Append(block.Str("text"));
+                    if (block.Get("citations") is List<object> cites)
+                        foreach (var c in cites) AddSource(reply, c.Str("title"), c.Str("url"));
+                    prevWasText = true;
+                    continue;
+                }
+                prevWasText = false;
+                if (type == "tool_use")
+                {
+                    var args = ParseArgs(block.Get("input"), out var err);
+                    reply.toolCalls.Add(new ToolCall { id = block.Str("id"), name = block.Str("name"), args = args, parseError = err });
+                }
+                else if (type == "server_tool_use" && block.Str("name") == "web_search")
+                {
+                    string q = block.Get("input").Str("query");
+                    if (!string.IsNullOrEmpty(q)) reply.webSearchQueries.Add(q);
+                }
+            }
+            reply.text = text.ToString().Trim();
+            reply.refused = reply.stopReason == "refusal";
+            reply.truncated = reply.stopReason == "max_tokens";
+            reply.unfinished = reply.stopReason == "pause_turn";
+            return reply;
+        }
+
+        Dictionary<string, object> BuildBody(string system, List<object> messages, List<ToolSpec> tools, bool webSearch, string effort, bool fallback)
+        {
             var body = new Dictionary<string, object>
             {
                 { "model", model },
                 { "max_tokens", 16000 },
                 { "system", system },
-                { "messages", history },
+                { "messages", messages },
                 // 자동 prompt caching: 도구 루프에서 매번 다시 보내는 앞부분을 캐시해서 비용을 줄인다
                 { "cache_control", new Dictionary<string, object> { { "type", "ephemeral" } } },
             };
-            if (tools.Count > 0)
+            var toolList = tools.Select(t => (object)new Dictionary<string, object>
             {
-                body["tools"] = tools.Select(t => (object)new Dictionary<string, object>
+                { "name", t.name },
+                { "description", t.description },
+                { "input_schema", t.schema },
+            }).ToList();
+            if (webSearch)
+            {
+                // Anthropic 서버에서 실행되는 웹 검색. 기본 버전은 모든 Claude 모델(Haiku 4.5 포함)에서 쓸 수 있다.
+                toolList.Add(new Dictionary<string, object>
                 {
-                    { "name", t.name },
-                    { "description", t.description },
-                    { "input_schema", t.schema },
-                }).ToList();
+                    { "type", "web_search_20250305" },
+                    { "name", "web_search" },
+                    { "max_uses", MaxWebSearchesPerRequest },
+                });
             }
-            string effort = AdvisorMod.Settings.EffectiveEffort(ProviderKind.Anthropic, model);
+            if (toolList.Count > 0) body["tools"] = toolList;
             if (!string.IsNullOrEmpty(effort))
                 body["output_config"] = new Dictionary<string, object> { { "effort", effort } };
-            bool fallback = def != null && def.serverFallback;
             if (fallback) body["fallbacks"] = "default";
-
-            var resp = await PostJson(Base + "messages", Headers(fallback), body, ct).ConfigureAwait(false);
-
-            var reply = new LlmReply { stopReason = resp.Str("stop_reason") };
-            var content = resp.Arr("content");
-            reply.historyItems.Add(new Dictionary<string, object> { { "role", "assistant" }, { "content", content } });
-            var texts = new List<string>();
-            foreach (var block in content)
-            {
-                string type = block.Str("type");
-                if (type == "text") texts.Add(block.Str("text"));
-                else if (type == "tool_use")
-                {
-                    var args = ParseArgs(block.Get("input"), out var err);
-                    reply.toolCalls.Add(new ToolCall { id = block.Str("id"), name = block.Str("name"), args = args, parseError = err });
-                }
-            }
-            reply.text = string.Join("\n", texts).Trim();
-            reply.refused = reply.stopReason == "refusal";
-            reply.truncated = reply.stopReason == "max_tokens";
-
-            var u = resp.Get("usage");
-            reply.usage = new Usage
-            {
-                inputUncached = (long)u.Num("input_tokens"),
-                cacheRead = (long)u.Num("cache_read_input_tokens"),
-                cacheWrite = (long)u.Num("cache_creation_input_tokens"),
-                output = (long)u.Num("output_tokens"),
-            };
-            return reply;
+            return body;
         }
 
         public override async Task<List<ModelPrice>> ListModels(CancellationToken ct)
@@ -499,37 +603,45 @@ namespace AIAdvisor
             }
         }
 
+        public override bool SupportsWebSearch => true;
+
         public override async Task<LlmReply> Complete(string system, List<object> history, List<ToolSpec> tools, CancellationToken ct)
         {
-            var body = new Dictionary<string, object>
+            string effort = AdvisorMod.Settings.EffectiveEffort(ProviderKind.OpenAI, model);
+            Dictionary<string, object> BuildBody(bool webSearch)
             {
-                { "model", model },
-                { "instructions", system },
-                { "input", history },
-                { "store", false },
-                { "include", new List<object> { "reasoning.encrypted_content" } },
-            };
-            if (tools.Count > 0)
-            {
-                body["tools"] = tools.Select(t => (object)new Dictionary<string, object>
+                var body = new Dictionary<string, object>
+                {
+                    { "model", model },
+                    { "instructions", system },
+                    { "input", history },
+                    { "store", false },
+                    { "include", new List<object> { "reasoning.encrypted_content" } },
+                };
+                var toolList = tools.Select(t => (object)new Dictionary<string, object>
                 {
                     { "type", "function" },
                     { "name", t.name },
                     { "description", t.description },
                     { "parameters", t.schema },
                 }).ToList();
+                // OpenAI 서버에서 실행되는 웹 검색. 결과는 web_search_call 항목과 url_citation 주석으로 돌아온다.
+                if (webSearch) toolList.Add(new Dictionary<string, object> { { "type", "web_search" } });
+                if (toolList.Count > 0) body["tools"] = toolList;
+                if (!string.IsNullOrEmpty(effort))
+                    body["reasoning"] = new Dictionary<string, object> { { "effort", effort } };
+                return body;
             }
-            string effort = AdvisorMod.Settings.EffectiveEffort(ProviderKind.OpenAI, model);
-            if (!string.IsNullOrEmpty(effort))
-                body["reasoning"] = new Dictionary<string, object> { { "effort", effort } };
 
-            var resp = await PostJson(baseUrl + "responses", Headers(), body, ct).ConfigureAwait(false);
+            var reply = new LlmReply();
+            var resp = await PostWithWebSearchFallback(baseUrl + "responses", Headers(), BuildBody, reply, ct).ConfigureAwait(false);
 
-            var reply = new LlmReply { stopReason = resp.Str("status") };
+            reply.stopReason = resp.Str("status");
             var texts = new List<string>();
+            int searches = 0;
             foreach (var item in resp.Arr("output"))
             {
-                // 추론/메시지/함수 호출 항목을 전부 원본 그대로 다음 요청에 다시 보낸다
+                // 추론/메시지/함수 호출/웹 검색 항목을 전부 원본 그대로 다음 요청에 다시 보낸다
                 reply.historyItems.Add(item);
                 switch (item.Str("type"))
                 {
@@ -537,7 +649,12 @@ namespace AIAdvisor
                         foreach (var part in item.Arr("content"))
                         {
                             string pt = part.Str("type");
-                            if (pt == "output_text") texts.Add(part.Str("text"));
+                            if (pt == "output_text")
+                            {
+                                texts.Add(part.Str("text"));
+                                foreach (var a in part.Arr("annotations"))
+                                    if (a.Str("type") == "url_citation") AddSource(reply, a.Str("title"), a.Str("url"));
+                            }
                             else if (pt == "refusal")
                             {
                                 reply.refused = true;
@@ -548,6 +665,16 @@ namespace AIAdvisor
                     case "function_call":
                         var args = ParseArgs(item.Get("arguments"), out var err);
                         reply.toolCalls.Add(new ToolCall { id = item.Str("call_id"), name = item.Str("name"), args = args, parseError = err });
+                        break;
+                    case "web_search_call":
+                        var action = item.Get("action");
+                        // 페이지 열기/페이지 내 찾기는 검색 요금이 붙지 않는다
+                        if (action.Str("type") == "search")
+                        {
+                            searches++;
+                            string q = action.Str("query");
+                            if (!string.IsNullOrEmpty(q)) reply.webSearchQueries.Add(q);
+                        }
                         break;
                 }
             }
@@ -562,6 +689,7 @@ namespace AIAdvisor
                 inputUncached = Math.Max(0, input - cached),
                 cacheRead = cached,
                 output = (long)u.Num("output_tokens"),
+                webSearches = searches,
             };
             return reply;
         }

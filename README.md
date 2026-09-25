@@ -45,6 +45,7 @@ RimWorld throws a lot at you: moods, raids, food, work priorities, research. AI 
 |---|---|
 | 🔍 **Reads your live colony** | Colonists (skills, passions, traits, health, mood thoughts), resources, threats, research, work priorities, rooms, beds, power, animals, prisoners, recent events and whatever you have selected |
 | 🤖 **Use the AI you like** | OpenAI, Claude, Gemini, OpenRouter, or your local models. The provider is detected from your API key |
+| 🌐 **Web search** | With a Claude or OpenAI key, the advisor can check the RimWorld Wiki and other sites when it is unsure, and shows its sources. Uses each provider's built-in web search (about $0.01 per search, can be turned off) |
 | 🆓 **Free options** | Local models through Ollama / LM Studio, or connect your own AI app (Claude Code, Codex CLI, Gemini CLI) over MCP |
 | 💰 **Cost you can see** | Estimated cost per answer, per session and in total, with an optional spending limit |
 | ⏸️ **Stays out of your way** | Pauses the game when you ask (optional). Read-only: it never changes your colony |
