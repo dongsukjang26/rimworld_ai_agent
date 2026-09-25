@@ -13,6 +13,9 @@ It reads your colony's live data, then tells you what to do next.
 ![Local models](https://img.shields.io/badge/Local_models-Ollama_%7C_LM_Studio-2e7d32?style=flat-square)
 ![MCP](https://img.shields.io/badge/MCP-Claude_Code_%7C_Codex_%7C_Gemini_CLI-555?style=flat-square)
 
+[![Steam Workshop](https://img.shields.io/badge/Steam_Workshop-Subscribe-1b2838?style=for-the-badge&logo=steam&logoColor=white)](https://steamcommunity.com/sharedfiles/filedetails/?id=3807782572)
+[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/dongsukjang26)
+
 <img src="Promo/1_priorities.png" alt="AI Advisor answering 'give me our top priorities' with live colony data" width="100%">
 
 </div>
@@ -154,6 +157,16 @@ Yes. The mod stores nothing in your save file.
 - **HTTP 429 / 5xx**: the server is busy. The mod retries automatically.
 - **A model rejects a reasoning setting**: choose *Default*.
 </details>
+
+## Support
+
+AI Advisor is free and always will be. If it saves your colony (or your evening), you can support development:
+
+<p align="center">
+  <a href="https://github.com/sponsors/dongsukjang26"><img src="Promo/sponsor_banner.png" alt="Support AI Advisor on GitHub Sponsors" width="480"></a>
+</p>
+
+Bug reports and ideas are just as welcome. Open an [issue](https://github.com/dongsukjang26/rimworld_ai_agent/issues) or leave a comment on the [Steam Workshop page](https://steamcommunity.com/sharedfiles/filedetails/?id=3807782572).
 
 ---
 

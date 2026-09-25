@@ -76,5 +76,9 @@ A: "HTTP 401" means the key is wrong or expired. "Insufficient quota" or "credit
 
 [Notes]
 - Costs are estimates based on public prices. Your provider's bill is the source of truth.
-- Requires RimWorld 1.6. Works with or without DLCs.</description>
+- Requires RimWorld 1.6. Works with or without DLCs.
+
+[Links]
+- Source code and issues: https://github.com/dongsukjang26/rimworld_ai_agent
+- Support development: https://github.com/sponsors/dongsukjang26</description>
 </ModMetaData>
