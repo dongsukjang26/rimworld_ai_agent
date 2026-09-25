@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AIAdvisor_ApiKey>API 키</AIAdvisor_ApiKey>
+  <AIAdvisor_ApiKeyHelp>지원: Anthropic (sk-ant-), OpenAI (sk-), Gemini (AIza), OpenRouter (sk-or-)</AIAdvisor_ApiKeyHelp>
+  <AIAdvisor_Show>보기</AIAdvisor_Show>
+  <AIAdvisor_Hide>숨기기</AIAdvisor_Hide>
+  <AIAdvisor_Paste>붙여넣기</AIAdvisor_Paste>
+  <AIAdvisor_DetectedProvider>인식된 제공사: {0}</AIAdvisor_DetectedProvider>
+  <AIAdvisor_UnknownKey>알 수 없는 키 형식</AIAdvisor_UnknownKey>
+  <AIAdvisor_Model>모델</AIAdvisor_Model>
+  <AIAdvisor_FetchModels>API에서 모델 불러오기</AIAdvisor_FetchModels>
+  <AIAdvisor_PriceNote>가격: 100만 토큰당 USD (입력 / 출력)</AIAdvisor_PriceNote>
+  <AIAdvisor_Fetching>API에 연결하는 중...</AIAdvisor_Fetching>
+  <AIAdvisor_FetchOk>키가 정상입니다. 모델 {0}개를 불러왔습니다.</AIAdvisor_FetchOk>
+  <AIAdvisor_FetchFail>실패: {0}</AIAdvisor_FetchFail>
+  <AIAdvisor_Effort>추론 강도</AIAdvisor_Effort>
+  <AIAdvisor_EffortDefault>기본값</AIAdvisor_EffortDefault>
+  <AIAdvisor_EffortHelp>낮을수록 빠르고 저렴합니다.</AIAdvisor_EffortHelp>
+  <AIAdvisor_EffortUnsupported>없음</AIAdvisor_EffortUnsupported>
+  <AIAdvisor_EffortShort>추론: {0}</AIAdvisor_EffortShort>
+  <AIAdvisor_PauseOnSend>질문을 보내면 게임 일시정지</AIAdvisor_PauseOnSend>
+  <AIAdvisor_ResumeAfter>답변이 오면 원래 속도로 다시 진행</AIAdvisor_ResumeAfter>
+  <AIAdvisor_MaxToolRounds>질문 하나당 데이터 조회 최대 횟수: {0}</AIAdvisor_MaxToolRounds>
+  <AIAdvisor_SpendLimit>사용 한도 (USD, 0이면 제한 없음)</AIAdvisor_SpendLimit>
+  <AIAdvisor_UsageTotal>누적 사용: {0} / 요청 {1}회 (입력 {2} / 출력 {3} 토큰)</AIAdvisor_UsageTotal>
+  <AIAdvisor_UnpricedNote>가격을 모르는 모델로 보낸 요청 {0}회는 합계에 빠져 있습니다.</AIAdvisor_UnpricedNote>
+  <AIAdvisor_ResetUsage>사용량 통계 초기화</AIAdvisor_ResetUsage>
+  <AIAdvisor_KeyStorageNote>키는 RimWorld Config 폴더에 평문으로 저장됩니다.</AIAdvisor_KeyStorageNote>
+
+  <AIAdvisor_SetKeyFirst>설정에서 API 키를 먼저 입력하세요</AIAdvisor_SetKeyFirst>
+  <AIAdvisor_ModelTip>{0} - 누르면 모델을 바꿀 수 있습니다</AIAdvisor_ModelTip>
+  <AIAdvisor_NewChat>새 대화</AIAdvisor_NewChat>
+  <AIAdvisor_Settings>설정</AIAdvisor_Settings>
+  <AIAdvisor_CostLine>이번 답변 {0} · 이번 세션 {1} · 누적 {2}</AIAdvisor_CostLine>
+  <AIAdvisor_LimitShort>(한도 {0})</AIAdvisor_LimitShort>
+  <AIAdvisor_Welcome>정착지에 대해 무엇이든 물어보세요.\n\n예시:\n- 의사는 누가 맡는 게 좋을까?\n- 다음 습격에 대비가 됐어?\n- 다음엔 뭘 연구해야 해?\n- 타냐 기분이 왜 이렇게 나빠?\n\nEnter = 전송, Shift+Enter = 줄바꿈</AIAdvisor_Welcome>
+  <AIAdvisor_Copied>클립보드에 복사했습니다.</AIAdvisor_Copied>
+  <AIAdvisor_Cancel>취소</AIAdvisor_Cancel>
+  <AIAdvisor_Send>전송</AIAdvisor_Send>
+
+  <AIAdvisor_NoKey>유효한 API 키가 없습니다. 설정에서 입력하세요.</AIAdvisor_NoKey>
+  <AIAdvisor_LimitReached>사용 한도({0})에 도달했습니다. 설정에서 한도를 올리거나 사용량 통계를 초기화하세요.</AIAdvisor_LimitReached>
+  <AIAdvisor_ProviderChanged>API 제공사가 바뀌어서 이전 대화는 이어지지 않습니다.</AIAdvisor_ProviderChanged>
+  <AIAdvisor_Thinking>생각하는 중</AIAdvisor_Thinking>
+  <AIAdvisor_ReadingData>게임 데이터 확인 중:</AIAdvisor_ReadingData>
+  <AIAdvisor_ToolUse>[조회]</AIAdvisor_ToolUse>
+  <AIAdvisor_Refused>모델이 이 요청에 대한 답변을 거절했습니다.</AIAdvisor_Refused>
+  <AIAdvisor_EmptyAnswer>(빈 답변)</AIAdvisor_EmptyAnswer>
+  <AIAdvisor_Truncated>(답변이 너무 길어서 중간에 잘렸습니다.)</AIAdvisor_Truncated>
+  <AIAdvisor_HistoryTrimmed>조회 횟수 한도에 걸려서 이번 문답은 대화 기록에 남기지 않았습니다.</AIAdvisor_HistoryTrimmed>
+  <AIAdvisor_Cancelled>취소했습니다.</AIAdvisor_Cancelled>
+  <AIAdvisor_Error>오류:</AIAdvisor_Error>
+
+  <AIAdvisor_ConnectionMode>연결 방식</AIAdvisor_ConnectionMode>
+  <AIAdvisor_ModeApiKey>API 키</AIAdvisor_ModeApiKey>
+  <AIAdvisor_ModeLocal>로컬 모델</AIAdvisor_ModeLocal>
+  <AIAdvisor_ModeCurrent>사용 중: {0}</AIAdvisor_ModeCurrent>
+  <AIAdvisor_LocalHelp>Ollama나 LM Studio 서버를 먼저 켜 두세요. 키와 비용이 없습니다.</AIAdvisor_LocalHelp>
+  <AIAdvisor_LocalUrl>서버 주소</AIAdvisor_LocalUrl>
+  <AIAdvisor_LocalModelHelp>도구 호출을 지원하는 모델이 필요합니다 (예: qwen3, llama3.1).</AIAdvisor_LocalModelHelp>
+  <AIAdvisor_PickModel>모델을 고르세요</AIAdvisor_PickModel>
+  <AIAdvisor_Free>무료</AIAdvisor_Free>
+  <AIAdvisor_NoModel>선택된 모델이 없습니다. 설정에서 골라 주세요.</AIAdvisor_NoModel>
+
+  <AIAdvisor_McpTitle>내 AI 앱 연결하기 (MCP)</AIAdvisor_McpTitle>
+  <AIAdvisor_McpHelp>Claude Code, Codex, Gemini CLI 같은 내 AI 앱이 게임 데이터를 읽게 합니다. API 비용이 없습니다.</AIAdvisor_McpHelp>
+  <AIAdvisor_McpEnable>MCP 서버 켜기</AIAdvisor_McpEnable>
+  <AIAdvisor_McpPort>포트</AIAdvisor_McpPort>
+  <AIAdvisor_McpApply>적용 / 재시작</AIAdvisor_McpApply>
+  <AIAdvisor_McpRunning>실행 중: {0}  (요청 {1}회)</AIAdvisor_McpRunning>
+  <AIAdvisor_McpFailed>시작 실패: {0}  (다른 포트를 써 보세요)</AIAdvisor_McpFailed>
+  <AIAdvisor_McpOff>꺼짐</AIAdvisor_McpOff>
+  <AIAdvisor_McpCommands>쓰는 앱의 명령을 터미널에서 한 번 실행하세요:</AIAdvisor_McpCommands>
+  <AIAdvisor_McpUsage>정착지를 불러온 뒤 그 앱에서 질문하세요. MCP가 켜져 있으면 게임 창이 뒤에 있어도 게임이 계속 돌아가니, 질문할 땐 일시정지해 두세요.</AIAdvisor_McpUsage>
+  <AIAdvisor_Copy>복사</AIAdvisor_Copy>
+  <AIAdvisor_Retrying>서버가 바쁩니다 ({3}). {0}초 뒤 다시 시도합니다 ({1}/{2})</AIAdvisor_Retrying>
+</LanguageData>

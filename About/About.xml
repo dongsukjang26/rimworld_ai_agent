@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>AI Advisor</name>
+  <author>dsjang</author>
+  <packageId>dsjang.aiadvisor</packageId>
+  <modVersion>1.0.0</modVersion>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>An AI strategy advisor that lives inside your game. It reads your colony's live data, then helps you plan: what to do first, how to prepare for threats, who should do which job, and what to research next.
+
+[What you can ask]
+- "Look over the colony and give me our top 5 priorities for the next few days."
+- "A raid could hit any time. How should we prepare with what we have right now?"
+- "Review everyone's work priorities and tell me what to change and why."
+- "Winter is coming. Are food, heating and clothing enough? What's missing?"
+- "Which prisoner is worth recruiting, and who should be the warden?"
+- "Plan a research path toward electricity and better defenses."
+- "Why is our mood so low lately, and how do we fix it?"
+
+[Features]
+- Reads your colony directly: colonists (skills, passions, traits, health, mood thoughts), resources, threats, research, work priorities, rooms, beds, power, animals, prisoners, recent events and whatever you have selected.
+- Use the AI you like: OpenAI, Claude, Gemini, OpenRouter, or your local models. The provider is detected from your API key and you can switch models from the chat window.
+- Free options:
+  - Local models through Ollama or LM Studio (no key, no cost).
+  - MCP server: connect your own AI app (Claude Code, Codex CLI, Gemini CLI) and ask from there, using the plan you already pay for.
+- Shows the estimated cost of each answer, the session and the total. Optional spending limit.
+- Pauses the game when you send a question (optional).
+- Reasoning effort selector that only lists the values your model accepts.
+- Works in any language: the advisor replies in the language you write in. UI in English and Korean.
+
+[Setup]
+1. Get an API key from your provider (OpenAI, Anthropic, Google AI Studio or OpenRouter), or start Ollama / LM Studio.
+2. Options &gt; Mod settings &gt; AI Advisor. Paste the key (the provider is detected automatically), or choose "Local model".
+3. Pick a model, then load a colony and click "AI advisor" in the bottom bar.
+4. Type a question and press Enter (Shift+Enter for a new line).
+You only do this once. Your key, model and other settings are saved and loaded automatically next time.
+
+[Q&amp;A]
+Q: Can the mod author see or collect my API key?
+A: No. There is no server behind this mod and no telemetry. Your key is stored only on your PC, in RimWorld's Config folder (Mod_AIAdvisor_AdvisorMod.xml), and it is sent only to the provider you chose (for example api.openai.com), over HTTPS, when you ask a question. The full source code is included in the Source folder, so you can check this yourself.
+
+Q: Where exactly is the key stored? How do I remove it?
+A: In RimWorld's Config folder:
+- Windows: %USERPROFILE%\AppData\LocalLow\Ludeon Studios\RimWorld by Ludeon Studios\Config
+- macOS: ~/Library/Application Support/RimWorld/Config
+- Linux: ~/.config/unity3d/Ludeon Studios/RimWorld by Ludeon Studios/Config
+It is plain text, so don't share that file. To remove the key, clear the field in the mod settings or delete the file.
+
+Q: How much does it cost?
+A: You pay your provider directly, per token. A typical question reads a few kinds of game data, which usually costs well under one cent with small models (GPT-6 Luna, Gemini Flash-Lite, Claude Haiku) and a few cents with top models. The chat window shows the estimate for every answer, and you can set a spending limit. Local models and the MCP option cost nothing extra.
+
+Q: Which model should I use?
+A: Small, cheap models are fine for everyday questions. Use a stronger model for long-term strategy or complex situations. You can switch models at any time from the chat window.
+
+Q: Does it change my colony?
+A: No. It only reads game data. The one exception is moving the camera to a colonist it is talking about.
+
+Q: What data is sent to the AI?
+A: Only the summaries the advisor asks for while answering your question (for example the colonist list or current threats), plus the names of your active DLCs and mods. Your save file is never sent.
+
+Q: Does it slow down the game?
+A: No. It does nothing until you ask a question, and reading the data takes milliseconds.
+
+Q: Is it safe to add or remove mid-save?
+A: Yes. The mod stores nothing in your save file.
+
+Q: Can I use a local model?
+A: Yes. Choose "Local model" in the settings and use any model your Ollama or LM Studio server provides. The model must support tool (function) calling, for example Qwen3 or Llama 3.1 and newer. Small models may give rougher answers.
+
+Q: How do I use my Claude Code / Codex / Gemini CLI subscription?
+A: Enable the MCP server in the mod settings and run the command shown there once in a terminal. Then load a colony and ask from that app. While the MCP server is on, the game keeps running when its window is in the background, so pause it while you ask.
+
+Q: I get an error.
+A: "HTTP 401" means the key is wrong or expired. "Insufficient quota" or "credit balance" means your provider account needs credits. Busy servers (HTTP 429 or 5xx) are retried automatically. If a model rejects a reasoning setting, choose "Default".
+
+[Notes]
+- Costs are estimates based on public prices. Your provider's bill is the source of truth.
+- Requires RimWorld 1.6. Works with or without DLCs.</description>
+</ModMetaData>

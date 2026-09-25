@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <MainButtonDef>
+    <defName>AIAdvisor</defName>
+    <label>AI advisor</label>
+    <description>Ask the AI advisor about your colony.</description>
+    <workerClass>AIAdvisor.MainButtonWorker_Advisor</workerClass>
+    <order>200</order>
+    <validWithoutMap>false</validWithoutMap>
+  </MainButtonDef>
+</Defs>

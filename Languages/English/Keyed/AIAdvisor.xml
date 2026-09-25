@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <AIAdvisor_ApiKey>API key</AIAdvisor_ApiKey>
+  <AIAdvisor_ApiKeyHelp>Supported: Anthropic (sk-ant-), OpenAI (sk-), Gemini (AIza), OpenRouter (sk-or-)</AIAdvisor_ApiKeyHelp>
+  <AIAdvisor_Show>Show</AIAdvisor_Show>
+  <AIAdvisor_Hide>Hide</AIAdvisor_Hide>
+  <AIAdvisor_Paste>Paste</AIAdvisor_Paste>
+  <AIAdvisor_DetectedProvider>Detected provider: {0}</AIAdvisor_DetectedProvider>
+  <AIAdvisor_UnknownKey>Unknown key format</AIAdvisor_UnknownKey>
+  <AIAdvisor_Model>Model</AIAdvisor_Model>
+  <AIAdvisor_FetchModels>Load models from API</AIAdvisor_FetchModels>
+  <AIAdvisor_PriceNote>Prices: USD per 1M tokens (input / output)</AIAdvisor_PriceNote>
+  <AIAdvisor_Fetching>Contacting API...</AIAdvisor_Fetching>
+  <AIAdvisor_FetchOk>Key works. {0} models loaded.</AIAdvisor_FetchOk>
+  <AIAdvisor_FetchFail>Failed: {0}</AIAdvisor_FetchFail>
+  <AIAdvisor_Effort>Reasoning</AIAdvisor_Effort>
+  <AIAdvisor_EffortDefault>Default</AIAdvisor_EffortDefault>
+  <AIAdvisor_EffortHelp>Lower = faster and cheaper.</AIAdvisor_EffortHelp>
+  <AIAdvisor_EffortUnsupported>N/A</AIAdvisor_EffortUnsupported>
+  <AIAdvisor_EffortShort>Reasoning: {0}</AIAdvisor_EffortShort>
+  <AIAdvisor_PauseOnSend>Pause the game when sending a question</AIAdvisor_PauseOnSend>
+  <AIAdvisor_ResumeAfter>Resume the previous speed after the answer arrives</AIAdvisor_ResumeAfter>
+  <AIAdvisor_MaxToolRounds>Max data lookups per question: {0}</AIAdvisor_MaxToolRounds>
+  <AIAdvisor_SpendLimit>Spending limit in USD (0 = none)</AIAdvisor_SpendLimit>
+  <AIAdvisor_UsageTotal>Total usage: {0} over {1} requests (input {2} / output {3} tokens)</AIAdvisor_UsageTotal>
+  <AIAdvisor_UnpricedNote>{0} requests used a model with unknown price and are not included in the total.</AIAdvisor_UnpricedNote>
+  <AIAdvisor_ResetUsage>Reset usage statistics</AIAdvisor_ResetUsage>
+  <AIAdvisor_KeyStorageNote>The key is stored as plain text in RimWorld's Config folder.</AIAdvisor_KeyStorageNote>
+
+  <AIAdvisor_SetKeyFirst>Enter an API key in settings first</AIAdvisor_SetKeyFirst>
+  <AIAdvisor_ModelTip>{0} - click to switch model</AIAdvisor_ModelTip>
+  <AIAdvisor_NewChat>New chat</AIAdvisor_NewChat>
+  <AIAdvisor_Settings>Settings</AIAdvisor_Settings>
+  <AIAdvisor_CostLine>Last answer {0} · This session {1} · Total {2}</AIAdvisor_CostLine>
+  <AIAdvisor_LimitShort>(limit {0})</AIAdvisor_LimitShort>
+  <AIAdvisor_Welcome>Ask anything about your colony.\n\nExamples:\n- Who is best suited to be our doctor?\n- Are we ready for the next raid?\n- What should we research next?\n- Why is Tanya's mood so low?\n\nEnter = send, Shift+Enter = new line.</AIAdvisor_Welcome>
+  <AIAdvisor_Copied>Copied to clipboard.</AIAdvisor_Copied>
+  <AIAdvisor_Cancel>Cancel</AIAdvisor_Cancel>
+  <AIAdvisor_Send>Send</AIAdvisor_Send>
+
+  <AIAdvisor_NoKey>No valid API key. Open Settings and enter one.</AIAdvisor_NoKey>
+  <AIAdvisor_LimitReached>Spending limit ({0}) reached. Raise the limit or reset the usage statistics in settings.</AIAdvisor_LimitReached>
+  <AIAdvisor_ProviderChanged>The API provider changed, so the previous conversation was not carried over.</AIAdvisor_ProviderChanged>
+  <AIAdvisor_Thinking>Thinking</AIAdvisor_Thinking>
+  <AIAdvisor_ReadingData>Reading game data:</AIAdvisor_ReadingData>
+  <AIAdvisor_ToolUse>[Lookup]</AIAdvisor_ToolUse>
+  <AIAdvisor_Refused>The model declined to answer this request.</AIAdvisor_Refused>
+  <AIAdvisor_EmptyAnswer>(empty answer)</AIAdvisor_EmptyAnswer>
+  <AIAdvisor_Truncated>(The answer was cut off because it was too long.)</AIAdvisor_Truncated>
+  <AIAdvisor_HistoryTrimmed>The lookup limit was reached, so this exchange won't be remembered in the conversation.</AIAdvisor_HistoryTrimmed>
+  <AIAdvisor_Cancelled>Cancelled.</AIAdvisor_Cancelled>
+  <AIAdvisor_Error>Error:</AIAdvisor_Error>
+
+  <AIAdvisor_ConnectionMode>Connection</AIAdvisor_ConnectionMode>
+  <AIAdvisor_ModeApiKey>API key</AIAdvisor_ModeApiKey>
+  <AIAdvisor_ModeLocal>Local model</AIAdvisor_ModeLocal>
+  <AIAdvisor_ModeCurrent>Using: {0}</AIAdvisor_ModeCurrent>
+  <AIAdvisor_LocalHelp>Start your Ollama or LM Studio server first. No key, no cost.</AIAdvisor_LocalHelp>
+  <AIAdvisor_LocalUrl>Server URL</AIAdvisor_LocalUrl>
+  <AIAdvisor_LocalModelHelp>The model must support tool calling (e.g. qwen3, llama3.1).</AIAdvisor_LocalModelHelp>
+  <AIAdvisor_PickModel>Pick a model</AIAdvisor_PickModel>
+  <AIAdvisor_Free>free</AIAdvisor_Free>
+  <AIAdvisor_NoModel>No model selected. Choose one in settings.</AIAdvisor_NoModel>
+
+  <AIAdvisor_McpTitle>Connect your own AI app (MCP)</AIAdvisor_McpTitle>
+  <AIAdvisor_McpHelp>Lets your own AI app (Claude Code, Codex, Gemini CLI) read this game. No API cost.</AIAdvisor_McpHelp>
+  <AIAdvisor_McpEnable>Enable MCP server</AIAdvisor_McpEnable>
+  <AIAdvisor_McpPort>Port</AIAdvisor_McpPort>
+  <AIAdvisor_McpApply>Apply / restart</AIAdvisor_McpApply>
+  <AIAdvisor_McpRunning>Running: {0}  (requests: {1})</AIAdvisor_McpRunning>
+  <AIAdvisor_McpFailed>Could not start: {0}  (try another port)</AIAdvisor_McpFailed>
+  <AIAdvisor_McpOff>Off</AIAdvisor_McpOff>
+  <AIAdvisor_McpCommands>Run your app's command once in a terminal:</AIAdvisor_McpCommands>
+  <AIAdvisor_McpUsage>Load a colony, then ask in that app. While MCP is on the game keeps running in the background, so pause it while you ask.</AIAdvisor_McpUsage>
+  <AIAdvisor_Copy>Copy</AIAdvisor_Copy>
+  <AIAdvisor_Retrying>Server busy ({3}). Retrying in {0}s ({1}/{2})</AIAdvisor_Retrying>
+</LanguageData>
