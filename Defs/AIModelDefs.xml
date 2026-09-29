@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  모델 목록과 가격표 (USD / 1M tokens). 가격이 바뀌면 여기만 고치면 되고, 다시 빌드할 필요는 없습니다.
+  provider: Anthropic | OpenAI | Gemini | OpenRouter
+  cachedInputPerM: 캐시에서 읽은 입력 토큰 가격. 생략하면 provider 기본 비율을 씁니다.
+  efforts: 이 모델이 받는 추론 강도 값. 비어 있으면 추론 강도 설정을 보내지 않습니다.
+           (확인: 각 사 모델 문서 + OpenRouter supported_efforts, 2026-09)
+  serverFallback: Anthropic server-side refusal fallback 사용 여부
+  가격 기준일: 2026-09 (각 사 공식 가격 페이지)
+-->
+<Defs>
+
+  <!-- ===== Anthropic (Claude) ===== -->
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_ClaudeOpus5</defName>
+    <label>Claude Opus 5</label>
+    <provider>Anthropic</provider>
+    <modelId>claude-opus-5</modelId>
+    <efforts><li>low</li><li>medium</li><li>high</li><li>xhigh</li><li>max</li></efforts>
+    <inputPerM>5</inputPerM>
+    <outputPerM>25</outputPerM>
+    <serverFallback>true</serverFallback>
+    <order>0</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_ClaudeOpus55</defName>
+    <label>Claude Opus 5.5</label>
+    <provider>Anthropic</provider>
+    <modelId>claude-opus-5-5</modelId>
+    <efforts><li>low</li><li>medium</li><li>high</li><li>xhigh</li><li>max</li></efforts>
+    <inputPerM>4</inputPerM>
+    <outputPerM>20</outputPerM>
+    <order>1</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_ClaudeFable51</defName>
+    <label>Claude Fable 5.1</label>
+    <provider>Anthropic</provider>
+    <modelId>claude-fable-5-1</modelId>
+    <efforts><li>low</li><li>medium</li><li>high</li><li>xhigh</li><li>max</li></efforts>
+    <inputPerM>10</inputPerM>
+    <outputPerM>50</outputPerM>
+    <cachedInputPerM>0.25</cachedInputPerM>
+    <serverFallback>true</serverFallback>
+    <order>2</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_ClaudeSonnet5</defName>
+    <label>Claude Sonnet 5</label>
+    <provider>Anthropic</provider>
+    <modelId>claude-sonnet-5</modelId>
+    <efforts><li>low</li><li>medium</li><li>high</li><li>xhigh</li><li>max</li></efforts>
+    <inputPerM>2</inputPerM>
+    <outputPerM>10</outputPerM>
+    <order>3</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_ClaudeHaiku45</defName>
+    <label>Claude Haiku 4.5</label>
+    <provider>Anthropic</provider>
+    <modelId>claude-haiku-4-5</modelId>
+    <inputPerM>1</inputPerM>
+    <outputPerM>5</outputPerM>
+    <order>4</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_ClaudeOpus48</defName>
+    <label>Claude Opus 4.8</label>
+    <provider>Anthropic</provider>
+    <modelId>claude-opus-4-8</modelId>
+    <efforts><li>low</li><li>medium</li><li>high</li><li>xhigh</li><li>max</li></efforts>
+    <inputPerM>5</inputPerM>
+    <outputPerM>25</outputPerM>
+    <order>5</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_ClaudeSonnet46</defName>
+    <label>Claude Sonnet 4.6</label>
+    <provider>Anthropic</provider>
+    <modelId>claude-sonnet-4-6</modelId>
+    <efforts><li>low</li><li>medium</li><li>high</li><li>max</li></efforts>
+    <inputPerM>3</inputPerM>
+    <outputPerM>15</outputPerM>
+    <order>6</order>
+  </AIAdvisor.AIModelDef>
+
+  <!-- ===== OpenAI ===== -->
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt6Sol</defName>
+    <label>GPT-6 Sol</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-6-sol</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li><li>xhigh</li><li>max</li></efforts>
+    <inputPerM>2</inputPerM>
+    <cachedInputPerM>0.2</cachedInputPerM>
+    <outputPerM>10</outputPerM>
+    <order>0</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt6Astra</defName>
+    <label>GPT-6 Astra</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-6-astra</modelId>
+    <efforts><li>low</li><li>medium</li><li>high</li><li>xhigh</li><li>max</li></efforts>
+    <inputPerM>10</inputPerM>
+    <cachedInputPerM>1</cachedInputPerM>
+    <outputPerM>50</outputPerM>
+    <order>1</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt6Luna</defName>
+    <label>GPT-6 Luna</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-6-luna</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li><li>xhigh</li><li>max</li></efforts>
+    <inputPerM>0.1</inputPerM>
+    <cachedInputPerM>0.01</cachedInputPerM>
+    <outputPerM>0.5</outputPerM>
+    <order>2</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt56Terra</defName>
+    <label>GPT-5.6 Terra</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-5.6-terra</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li><li>xhigh</li><li>max</li></efforts>
+    <inputPerM>2</inputPerM>
+    <cachedInputPerM>0.2</cachedInputPerM>
+    <outputPerM>12</outputPerM>
+    <order>3</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt56Luna</defName>
+    <label>GPT-5.6 Luna</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-5.6-luna</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li><li>xhigh</li><li>max</li></efforts>
+    <inputPerM>0.2</inputPerM>
+    <cachedInputPerM>0.02</cachedInputPerM>
+    <outputPerM>1.2</outputPerM>
+    <order>4</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt54Mini</defName>
+    <label>GPT-5.4 mini</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-5.4-mini</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li><li>xhigh</li></efforts>
+    <inputPerM>0.75</inputPerM>
+    <cachedInputPerM>0.075</cachedInputPerM>
+    <outputPerM>4.5</outputPerM>
+    <order>5</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt5Mini</defName>
+    <label>GPT-5 mini</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-5-mini</modelId>
+    <efforts><li>minimal</li><li>low</li><li>medium</li><li>high</li></efforts>
+    <inputPerM>0.25</inputPerM>
+    <cachedInputPerM>0.025</cachedInputPerM>
+    <outputPerM>2</outputPerM>
+    <order>6</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt41Mini</defName>
+    <label>GPT-4.1 mini</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-4.1-mini</modelId>
+    <inputPerM>0.4</inputPerM>
+    <cachedInputPerM>0.1</cachedInputPerM>
+    <outputPerM>1.6</outputPerM>
+    <order>7</order>
+  </AIAdvisor.AIModelDef>
+
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt56Sol</defName>
+    <label>GPT-5.6 Sol</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-5.6-sol</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li><li>xhigh</li><li>max</li></efforts>
+    <inputPerM>4</inputPerM>
+    <cachedInputPerM>0.4</cachedInputPerM>
+    <outputPerM>20</outputPerM>
+    <order>10</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt55</defName>
+    <label>GPT-5.5</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-5.5</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li><li>xhigh</li></efforts>
+    <inputPerM>5</inputPerM>
+    <cachedInputPerM>0.5</cachedInputPerM>
+    <outputPerM>30</outputPerM>
+    <order>11</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt54</defName>
+    <label>GPT-5.4</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-5.4</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li><li>xhigh</li></efforts>
+    <inputPerM>2.5</inputPerM>
+    <cachedInputPerM>0.25</cachedInputPerM>
+    <outputPerM>15</outputPerM>
+    <order>12</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt54Nano</defName>
+    <label>GPT-5.4 nano</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-5.4-nano</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li><li>xhigh</li></efforts>
+    <inputPerM>0.2</inputPerM>
+    <cachedInputPerM>0.02</cachedInputPerM>
+    <outputPerM>1.25</outputPerM>
+    <order>13</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt51</defName>
+    <label>GPT-5.1</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-5.1</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li></efforts>
+    <inputPerM>1.25</inputPerM>
+    <cachedInputPerM>0.125</cachedInputPerM>
+    <outputPerM>10</outputPerM>
+    <order>14</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt5</defName>
+    <label>GPT-5</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-5</modelId>
+    <efforts><li>minimal</li><li>low</li><li>medium</li><li>high</li></efforts>
+    <inputPerM>1.25</inputPerM>
+    <cachedInputPerM>0.125</cachedInputPerM>
+    <outputPerM>10</outputPerM>
+    <order>15</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt5Nano</defName>
+    <label>GPT-5 nano</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-5-nano</modelId>
+    <efforts><li>minimal</li><li>low</li><li>medium</li><li>high</li></efforts>
+    <inputPerM>0.05</inputPerM>
+    <cachedInputPerM>0.005</cachedInputPerM>
+    <outputPerM>0.4</outputPerM>
+    <order>16</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt41</defName>
+    <label>GPT-4.1</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-4.1</modelId>
+    <inputPerM>2</inputPerM>
+    <cachedInputPerM>0.5</cachedInputPerM>
+    <outputPerM>8</outputPerM>
+    <order>17</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gpt41Nano</defName>
+    <label>GPT-4.1 nano</label>
+    <provider>OpenAI</provider>
+    <modelId>gpt-4.1-nano</modelId>
+    <inputPerM>0.1</inputPerM>
+    <cachedInputPerM>0.025</cachedInputPerM>
+    <outputPerM>0.4</outputPerM>
+    <order>18</order>
+  </AIAdvisor.AIModelDef>
+
+  <!-- ===== Google Gemini (OpenAI 호환 엔드포인트 사용) ===== -->
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gemini38Flash</defName>
+    <label>Gemini 3.8 Flash</label>
+    <provider>Gemini</provider>
+    <modelId>gemini-3.8-flash</modelId>
+    <efforts><li>low</li><li>medium</li><li>high</li></efforts>
+    <inputPerM>0.75</inputPerM>
+    <outputPerM>3.75</outputPerM>
+    <order>0</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gemini31Pro</defName>
+    <label>Gemini 3.1 Pro (preview)</label>
+    <provider>Gemini</provider>
+    <modelId>gemini-3.1-pro-preview</modelId>
+    <efforts><li>low</li><li>medium</li><li>high</li></efforts>
+    <inputPerM>2</inputPerM>
+    <outputPerM>12</outputPerM>
+    <order>1</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gemini35FlashLite</defName>
+    <label>Gemini 3.5 Flash-Lite</label>
+    <provider>Gemini</provider>
+    <modelId>gemini-3.5-flash-lite</modelId>
+    <efforts><li>minimal</li><li>low</li><li>medium</li><li>high</li></efforts>
+    <inputPerM>0.3</inputPerM>
+    <outputPerM>2.5</outputPerM>
+    <order>2</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gemini25Flash</defName>
+    <label>Gemini 2.5 Flash</label>
+    <provider>Gemini</provider>
+    <modelId>gemini-2.5-flash</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li></efforts>
+    <inputPerM>0.3</inputPerM>
+    <outputPerM>2.5</outputPerM>
+    <order>3</order>
+  </AIAdvisor.AIModelDef>
+  <AIAdvisor.AIModelDef>
+    <defName>AIM_Gemini25FlashLite</defName>
+    <label>Gemini 2.5 Flash-Lite</label>
+    <provider>Gemini</provider>
+    <modelId>gemini-2.5-flash-lite</modelId>
+    <efforts><li>none</li><li>low</li><li>medium</li><li>high</li></efforts>
+    <inputPerM>0.1</inputPerM>
+    <outputPerM>0.4</outputPerM>
+    <order>4</order>
+  </AIAdvisor.AIModelDef>
+
+  <!-- OpenRouter는 API가 모델별 가격을 알려주므로 '모델 목록 불러오기'로 가져옵니다. -->
+
+</Defs>
